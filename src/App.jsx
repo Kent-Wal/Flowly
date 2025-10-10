@@ -1,5 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import Transactions from "./pages/Transactions.jsx";
+import Budgets from "./pages/Budgets.jsx";
+import Reports from "./pages/Reports.jsx";
+import Settings from "./pages/Settings.jsx";
 
 function Placeholder({ title }) {
   return (
@@ -15,11 +20,11 @@ export default function App() {
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Placeholder title="Dashboard" />} />
-        <Route path="/transactions" element={<Placeholder title="Transactions" />} />
-        <Route path="/budgets" element={<Placeholder title="Budgets" />} />
-        <Route path="/reports" element={<Placeholder title="Reports" />} />
-        <Route path="/settings" element={<Placeholder title="Settings" />} />
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/transactions" element={<Transactions />} />
+        <Route path="/budgets" element={<Budgets />} />
+        <Route path="/reports" element={<Reports />} />
+        <Route path="/settings" element={<Settings />} />
         <Route path="/signin" element={<Placeholder title="Sign In" />} />
         <Route path="/signup" element={<Placeholder title="Sign Up" />} />
       </Routes>

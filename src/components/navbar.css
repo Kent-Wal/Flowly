@@ -22,12 +22,12 @@
 
 .flw-nav__inner {
     display: grid;
-    grid-template-columns: 1fr auto auto;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 1rem;
-    max-width: 1160px;
-    margin: 0 auto;
-    padding: .75rem 1rem;
+    width: 100%;
+    margin: 0; /* remove centering so it hugs viewport edges */
+    padding: .75rem 1rem; /* keeps a small gutter from the very edge */
 }
 
 .flw-brand {
@@ -44,12 +44,13 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    font-size: 1.15rem;
+    font-size: 1.3rem;
 }
 
 .flw-menu {
     display: flex;
     gap: .75rem;
+    justify-content: center; /* center links within available middle column */
 }
 
 .flw-menu__link {

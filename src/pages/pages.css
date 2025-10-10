@@ -1,0 +1,427 @@
+/* src/pages/pages.css */
+:root {
+    --bg: #0b1020;
+    --panel: #0f172a;
+    --panel-2: #111827;
+    --text: #e5e7eb;
+    --muted: #9ca3af;
+    --cyan: #22d3ee;
+    --blue: #60a5fa;
+    --green: #34d399;
+    --orange: #f59e0b;
+    --red: #ef4444;
+    --ring: rgba(255, 255, 255, .08);
+    --shadow: 0 10px 30px rgba(0, 0, 0, .28);
+}
+
+.flw-page {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.flw-page-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.flw-h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    letter-spacing: .3px;
+}
+
+.flw-sub {
+    margin: 0;
+    color: var(--muted);
+}
+
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+@media (max-width:1000px) {
+
+    .grid-4,
+    .grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width:700px) {
+
+    .grid-4,
+    .grid-3,
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+.card {
+    background: linear-gradient(180deg, var(--panel), var(--panel-2));
+    border: 1px solid var(--ring);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    padding: 16px;
+}
+
+.card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.card h2 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.muted {
+    color: var(--muted);
+}
+
+.link {
+    color: var(--cyan);
+    cursor: pointer;
+}
+
+.pill-list {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pill {
+    background: rgba(255, 255, 255, .06);
+    border: 1px solid var(--ring);
+    border-radius: 999px;
+    padding: 6px 10px;
+}
+
+.stat .stat-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 6px 0 10px;
+}
+
+.sparkline {
+    height: 46px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, rgba(34, 211, 238, .2), rgba(96, 165, 250, .2));
+    border: 1px dashed rgba(255, 255, 255, .08);
+}
+
+.sparkline.positive {
+    box-shadow: inset 0 0 0 1px rgba(34, 211, 238, .35);
+}
+
+.sparkline.negative {
+    box-shadow: inset 0 0 0 1px rgba(239, 68, 68, .35);
+}
+
+.chart {
+    height: 260px;
+    border-radius: 12px;
+    background: repeating-linear-gradient(45deg, rgba(255, 255, 255, .03) 0 8px, transparent 8px 16px);
+    border: 1px solid var(--ring);
+}
+
+.chart.pie {
+    background:
+        conic-gradient(var(--cyan) 0 30%,
+            var(--blue) 30% 55%,
+            var(--green) 55% 80%,
+            rgba(255, 255, 255, .07) 80% 100%);
+}
+
+.chart.line,
+.chart.area,
+.chart.bars {
+    position: relative;
+    overflow: hidden;
+}
+
+.chart.line::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 24px;
+    height: 2px;
+    background: rgba(255, 255, 255, .06);
+    box-shadow: inset 0 -80px 80px -80px rgba(34, 211, 238, .2);
+}
+
+.chart.bars::after {
+    content: "";
+    position: absolute;
+    inset: 24px;
+    background:
+        linear-gradient(0deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .06)) top left / 100% 2px no-repeat,
+        repeating-linear-gradient(90deg, transparent 0 40px, rgba(255, 255, 255, .06) 40px 41px);
+    border-radius: 10px;
+}
+
+.chart.area::after {
+    content: "";
+    position: absolute;
+    inset: 16px;
+    background:
+        linear-gradient(180deg, rgba(34, 197, 94, .25), transparent),
+        linear-gradient(180deg, rgba(239, 68, 68, .25), transparent);
+    border-radius: 8px;
+}
+
+.table-wrap {
+    padding: 0;
+}
+
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: .95rem;
+}
+
+.table thead th {
+    position: sticky;
+    top: 0;
+    background: var(--panel);
+    border-bottom: 1px solid var(--ring);
+    text-align: left;
+    padding: 14px;
+}
+
+.table tbody td {
+    padding: 14px;
+    border-bottom: 1px solid var(--ring);
+}
+
+.table .right {
+    text-align: right;
+}
+
+.table tbody tr:hover {
+    background: rgba(255, 255, 255, .03);
+}
+
+.table-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: rgba(96, 165, 250, .15);
+    border: 1px solid rgba(96, 165, 250, .35);
+}
+
+.filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.input,
+.select {
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid var(--ring);
+    background: rgba(255, 255, 255, .04);
+    color: var(--text);
+}
+
+.input::placeholder {
+    color: var(--muted);
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, var(--cyan), var(--blue));
+    color: #0b1220;
+    border: none;
+    height: 38px;
+    padding: 0 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-outline {
+    height: 38px;
+    padding: 0 14px;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--ring);
+    cursor: pointer;
+}
+
+.chip {
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid var(--ring);
+    background: rgba(255, 255, 255, .04);
+    color: var(--text);
+    cursor: pointer;
+}
+
+.chip.primary {
+    background: linear-gradient(90deg, var(--cyan), var(--blue));
+    color: #0b1220;
+    border: none;
+}
+
+.progress {
+    height: 10px;
+    background: rgba(255, 255, 255, .06);
+    border: 1px solid var(--ring);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progress.large {
+    height: 14px;
+}
+
+.progress.small {
+    height: 8px;
+}
+
+.progress .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--cyan), var(--blue));
+    box-shadow: inset 0 0 12px rgba(0, 0, 0, .35);
+}
+
+.progress .progress-bar.warn {
+    background: linear-gradient(90deg, var(--orange), var(--red));
+}
+
+.progress.ok {
+    --c: var(--green);
+}
+
+.progress.ok .progress-bar {
+    background: linear-gradient(90deg, var(--green), #22c55e);
+}
+
+.progress.cyan .progress-bar {
+    background: linear-gradient(90deg, var(--cyan), #06b6d4);
+}
+
+.progress.blue .progress-bar {
+    background: linear-gradient(90deg, var(--blue), #3b82f6);
+}
+
+.progress.green .progress-bar {
+    background: linear-gradient(90deg, var(--green), #22c55e);
+}
+
+.progress.orange .progress-bar {
+    background: linear-gradient(90deg, var(--orange), #f97316);
+}
+
+.list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.list li {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--ring);
+    align-items: center;
+}
+
+.amount.negative {
+    color: #fda4af;
+}
+
+.amount.positive {
+    color: #86efac;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.form-grid label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.switch {
+    position: relative;
+    width: 48px;
+    height: 28px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .1);
+    border: 1px solid var(--ring);
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch span {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 24px;
+    height: 24px;
+    background: #fff;
+    border-radius: 50%;
+    transition: .2s;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .25);
+}
+
+.switch input:checked+span {
+    transform: translateX(20px);
+    background: linear-gradient(90deg, var(--cyan), var(--blue));
+}
+
+.budget.warn {
+    outline: 1px solid rgba(239, 68, 68, .35);
+}
+
+.pager {
+    display: flex;
+    gap: 8px;
+}
