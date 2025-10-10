@@ -8,7 +8,8 @@ export default function Reports() {
       <header className="flw-page-header">
         <h1 className="flw-h1">Reports</h1>
         <div className="filters">
-          <select className="select">
+            <select className="select">
+            <option>Last Month</option>
             <option>Last 3 months</option>
             <option>Last 6 months</option>
             <option>Year to date</option>

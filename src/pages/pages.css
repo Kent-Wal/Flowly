@@ -257,6 +257,16 @@
     border: 1px solid var(--ring);
     background: rgba(255, 255, 255, .04);
     color: var(--text);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    color-scheme: dark; /* hint UA to use dark popups */
+    /* custom chevron */
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M6 8l4 4 4-4'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px 16px;
+    padding-right: 38px; /* room for chevron */
 }
 
 .input::placeholder {
@@ -421,7 +431,52 @@
     outline: 1px solid rgba(239, 68, 68, .35);
 }
 
+/* Align budget footer content */
+.budget-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 8px; 
+}
+
+.card.budget .progress {
+    margin-top: 8px;
+}
+
+/* Extra padding for budget footer items */
+.budget-footer .muted {
+    padding: 2px 6px;
+}
+
+.budget-footer .chip {
+    padding: 0 16px; /* slightly wider than default */
+}
+
 .pager {
     display: flex;
     gap: 8px;
 }
+
+/* Dark select: fix white outline and white options popup */
+.select {
+    background-color: var(--panel); /* solid dark bg (override translucent) */
+    border-color: rgba(255, 255, 255, .2);
+    color: var(--text);
+}
+
+/* Try to enforce dark colors for the dropdown list */
+.select option,
+.select optgroup {
+    background-color: var(--panel-2) !important;
+    color: var(--text) !important;
+}
+
+/* Improve selected/hovered option contrast (when supported) */
+.select option:checked {
+    background-color: rgba(34, 211, 238, .2) !important;
+    color: var(--text) !important;
+}
+
+/* Dropdown option highlight colors (browser support varies) */
+/* Reverted to native behavior to avoid forcing hover colors */
