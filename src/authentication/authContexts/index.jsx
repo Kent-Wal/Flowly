@@ -1,4 +1,5 @@
-import React, { useContext, useState, useEffect } from "react";
+/* eslint-disable react-refresh/only-export-components */
+import React, { useContext, useState, useEffect, useCallback } from "react";
 import { auth } from "../../authentication/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -13,28 +14,26 @@ export function AuthProvider({ children }) {
     const [userLoggedIn, setUserLoggedIn] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(auth, initializeUser);
-        return unsubscribe;
-    }, [])
-
-    async function initializeUser(user) {
+    const initializeUser = useCallback((user) => {
         if (user) {
-            setCurrentUser({ ...user });
+            setCurrentUser(user);
             setUserLoggedIn(true);
-        }
-        else {
+        } else {
             setCurrentUser(null);
             setUserLoggedIn(false);
         }
         setLoading(false);
-    }
+    }, []);
 
-    const value = {
-        currentUser,
-        userLoggedIn,
-        loading
-    }
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, initializeUser, (error) => {
+            console.error("Auth state change error:", error);
+            setLoading(false);
+        });
+        return unsubscribe;
+    }, [initializeUser]);
+
+    const value = { currentUser, userLoggedIn, loading };
 
     return (
         <AuthContext.Provider value={value}>
