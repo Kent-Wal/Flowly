@@ -12,7 +12,7 @@ export default function SignIn() {
   const [error, setError] = useState("");
 
   if (userLoggedIn) {
-    navigate("/");
+    navigate("/");      //brings the user back to the dashboard
   }
 
   const onEmailPasswordSignIn = async (e) => {

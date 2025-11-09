@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../authentication/authContexts";
+import { doSignOut } from "../authentication/auth";
 import "./navbar.css";
 
 const MENU_ITEMS = [
@@ -13,6 +15,17 @@ const MENU_ITEMS = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const { userLoggedIn, currentUser } = useAuth();
+
+  const handleSignOut = async () => {
+    try {
+      await doSignOut();
+      navigate("/signin");
+    } catch (err) {
+      console.error("Sign out failed:", err);
+      // Optionally show a toast or inline error
+    }
+  };
 
   return (
     <header className="flw-nav">
@@ -41,18 +54,31 @@ export default function Navbar() {
         {/* Right: Auth buttons and Logo slot */}
         <div className="flw-right">
           <div className="flw-auth">
-            <button
-              className="flw-btn flw-btn--ghost"
-              onClick={() => navigate("/signin")}
-            >
-              Sign In
-            </button>
-            <button
-              className="flw-btn flw-btn--primary"
-              onClick={() => navigate("/signup")}
-            >
-              Sign Up
-            </button>
+            {userLoggedIn ? (
+              <>
+                <button 
+                  className="flw-btn flw-btn--ghost" 
+                  onClick={handleSignOut}
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  className="flw-btn flw-btn--ghost"
+                  onClick={() => navigate("/signin")}
+                >
+                  Sign In
+                </button>
+                <button
+                  className="flw-btn flw-btn--primary"
+                  onClick={() => navigate("/signup")}
+                >
+                  Sign Up
+                </button>
+              </>
+            )}
           </div>
 
           {/* Mobile burger */}
