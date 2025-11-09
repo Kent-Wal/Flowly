@@ -10,6 +10,8 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [showPw, setShowPw] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -60,29 +62,69 @@ export default function SignUp() {
           <div className="flw-field">
             <label>
               <span className="flw-label">Password</span>
-              <input
-                className="flw-input"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-                placeholder="Minimum 6 characters"
-              />
+              <div style={{ position: 'relative' }}>
+                <input
+                  className="flw-input has-icon"
+                  type={showPw ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                  placeholder="Minimum 6 characters"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPw(s => !s)}
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    right: 8,
+                    transform: 'translateY(-50%)',
+                    background: 'transparent',
+                    border: 'none',
+                    color: 'var(--muted)',
+                    cursor: 'pointer',
+                    fontSize: '.75rem'
+                  }}
+                  aria-label={showPw ? 'Hide password' : 'Show password'}
+                >
+                  {showPw ? 'Hide' : 'Show'}
+                </button>
+              </div>
             </label>
           </div>
           <div className="flw-field">
             <label>
               <span className="flw-label">Confirm Password</span>
-              <input
-                className="flw-input"
-                type="password"
-                value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
-                required
-                minLength={6}
-                placeholder="Re-type password"
-              />
+              <div style={{ position: 'relative' }}>
+                <input
+                  className="flw-input has-icon"
+                  type={showConfirm ? 'text' : 'password'}
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                  required
+                  minLength={6}
+                  placeholder="Re-type password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirm(s => !s)}
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    right: 8,
+                    transform: 'translateY(-50%)',
+                    background: 'transparent',
+                    border: 'none',
+                    color: 'var(--muted)',
+                    cursor: 'pointer',
+                    fontSize: '.75rem'
+                  }}
+                  aria-label={showConfirm ? 'Hide confirm password' : 'Show confirm password'}
+                >
+                  {showConfirm ? 'Hide' : 'Show'}
+                </button>
+              </div>
             </label>
           </div>
           {error && (

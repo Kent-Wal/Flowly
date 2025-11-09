@@ -5,6 +5,7 @@ import {
     signInWithEmailAndPassword,
     signInWithPopup,
     signOut as fbSignOut,
+    sendPasswordResetEmail,
 } from "firebase/auth";
 
 // Create user with email/password
@@ -26,4 +27,8 @@ export const doSignInWithGoogle = async () => {
 
 export const doSignOut = () => {
     return fbSignOut(auth);
+};
+
+export const doPasswordReset = (email) => {
+    return sendPasswordResetEmail(auth, email);
 };

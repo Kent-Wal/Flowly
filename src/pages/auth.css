@@ -59,6 +59,36 @@
   background: rgba(255, 255, 255, .04);
   color: var(--text);
   outline: none;
+  width: 100%;
+}
+
+/* When an end icon (eye) is present, add space so text doesn't overlap it */
+.flw-input.has-icon {
+  padding-right: 40px; /* room for eye button */
+}
+
+.flw-input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.flw-eye-toggle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flw-eye-toggle:hover {
+  color: var(--text);
 }
 
 .flw-input::placeholder {
