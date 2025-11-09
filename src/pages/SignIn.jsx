@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { doSignInWithEmailAndPassword, doSignInWithGoogle } from "../authentication/auth";
 import { useAuth } from "../authentication/authContexts";
+import "./auth.css";
 
 export default function SignIn() {
   const navigate = useNavigate();
@@ -11,9 +12,10 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  if (userLoggedIn) {
-    navigate("/");      //brings the user back to the dashboard
-  }
+  // Redirect once logged in (keep side-effect out of render path)
+  useEffect(() => {
+    if (userLoggedIn) navigate("/");
+  }, [userLoggedIn, navigate]);
 
   const onEmailPasswordSignIn = async (e) => {
     e.preventDefault();
@@ -45,46 +47,61 @@ export default function SignIn() {
   };
 
   return (
-    <div style={{ maxWidth: 420, margin: "2rem auto", padding: "1.5rem" }}>
-      <h1>Sign In</h1>
-      <form onSubmit={onEmailPasswordSignIn} style={{ display: "grid", gap: 12 }}>
-        <label>
-          <div>Email</div>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          <div>Password</div>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        {error && (
-          <div style={{ color: "#b00020", fontSize: 14 }} role="alert">
-            {error}
+    <div className="flw-auth-page">
+      <div className="flw-auth-card">
+        <header className="flw-auth-head">
+          <h1 className="flw-auth-title">Sign In</h1>
+          <p className="flw-auth-sub">Access your Flowly dashboard</p>
+        </header>
+        <form onSubmit={onEmailPasswordSignIn} className="flw-auth-form">
+          <div className="flw-field">
+            <label>
+              <span className="flw-label">Email</span>
+              <input
+                className="flw-input"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                placeholder="you@example.com"
+              />
+            </label>
           </div>
-        )}
-        <button type="submit" disabled={loading} className="flw-btn flw-btn--primary">
-          {loading ? "Signing in…" : "Sign In"}
-        </button>
-      </form>
-
-      <div style={{ marginTop: 16 }}>
-        <button onClick={onGoogleSignIn} disabled={loading} className="flw-btn flw-btn--ghost">
-          Continue with Google
-        </button>
+          <div className="flw-field">
+            <label>
+              <span className="flw-label">Password</span>
+              <input
+                className="flw-input"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="••••••••"
+              />
+            </label>
+          </div>
+          {error && (
+            <div className="flw-error" role="alert">{error}</div>
+          )}
+          <div className="flw-actions">
+            <button type="submit" disabled={loading} className="flw-btn flw-btn--primary">
+              {loading ? "Signing in…" : "Sign In"}
+            </button>
+            <div className="flw-divider">or</div>
+            <button
+              type="button"
+              onClick={onGoogleSignIn}
+              disabled={loading}
+              className="flw-btn flw-btn--ghost"
+            >
+              Continue with Google
+            </button>
+          </div>
+        </form>
+        <footer className="flw-auth-footer">
+          Don't have an account? <Link to="/signup" className="flw-link">Create one</Link>
+        </footer>
       </div>
-
-      <p style={{ marginTop: 16 }}>
-        Don't have an account? <Link to="/signup">Create one</Link>
-      </p>
     </div>
   );
 }

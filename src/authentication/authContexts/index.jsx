@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { useContext, useState, useEffect, useCallback } from "react";
 import { auth } from "../../authentication/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
 const AuthContext = React.createContext();
 
@@ -32,6 +32,17 @@ export function AuthProvider({ children }) {
         });
         return unsubscribe;
     }, [initializeUser]);
+
+    // Optional: explicit sign out on tab close. Note many browsers throttle async work here.
+    // With session persistence enabled, this is not strictly necessary.
+    useEffect(() => {
+        const onBeforeUnload = () => {
+            // Fire-and-forget; best-effort sign out.
+            try { void signOut(auth); } catch { /* noop */ }
+        };
+        window.addEventListener('beforeunload', onBeforeUnload);
+        return () => window.removeEventListener('beforeunload', onBeforeUnload);
+    }, []);
 
     const value = { currentUser, userLoggedIn, loading };
 

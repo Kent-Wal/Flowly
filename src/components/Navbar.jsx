@@ -15,12 +15,12 @@ const MENU_ITEMS = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const { userLoggedIn, currentUser } = useAuth();
+  const { userLoggedIn } = useAuth();
 
   const handleSignOut = async () => {
     try {
       await doSignOut();
-      navigate("/signin");
+      navigate("/");
     } catch (err) {
       console.error("Sign out failed:", err);
       // Optionally show a toast or inline error

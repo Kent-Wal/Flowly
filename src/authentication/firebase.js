@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, setPersistence, browserSessionPersistence } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -14,5 +14,11 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+
+// Use session persistence so auth state is cleared when the tab or browser closes.
+// This prevents automatic sign-in on a fresh tab after closing the previous one.
+setPersistence(auth, browserSessionPersistence).catch((err) => {
+  console.error("Failed to set auth persistence to session:", err);
+});
 
 export {app, auth};
