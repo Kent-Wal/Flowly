@@ -1,0 +1,53 @@
+.remember {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  user-select: none;
+  font-size: 14px;
+  color: #666;
+}
+
+.remember input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.remember__switch {
+  --w: 40px;
+  --h: 22px;
+  width: var(--w);
+  height: var(--h);
+  background: #e6e9ee;
+  border-radius: 999px;
+  position: relative;
+  transition: background 150ms ease;
+  flex: 0 0 auto;
+}
+
+.remember__knob {
+  position: absolute;
+  top: 50%;
+  left: 4px;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(16,24,40,0.06);
+  transition: left 150ms ease;
+}
+
+.remember input:checked + .remember__switch {
+  background: #0b74de;
+}
+
+.remember input:checked + .remember__switch .remember__knob {
+  left: calc(var(--w) - 4px - 16px);
+}
+
+.remember__text {
+  color: inherit;
+}

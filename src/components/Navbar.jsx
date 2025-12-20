@@ -40,8 +40,8 @@ export default function Navbar() {
         {/* Right: Auth buttons and Logo slot */}
         <div className="flw-right">
           <div className="flw-auth">
-            <button className="flw-btn flw-btn--ghost">Sign In</button>
-            <button className="flw-btn flw-btn--primary">Sign Up</button>
+            <Link to="/signin" className="flw-btn flw-btn--ghost">Sign In</Link>
+            <Link to="/signup" className="flw-btn flw-btn--primary">Sign Up</Link>
           </div>
 
           {/* Mobile burger */}
