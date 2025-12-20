@@ -1,7 +1,22 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./auth.css";
 
 export default function SignIn() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    //dont need to check if the email is valid (ie. contains '@') html already does this
+    fetch('/auth/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({email, password})
+    }); 
+  }
+
   return (
     <main style={{ display: "flex", justifyContent: "center", padding: "3rem" }}>
       <div style={{ width: 420, maxWidth: "95%" }}>
@@ -10,17 +25,15 @@ export default function SignIn() {
           <p style={{ color: "#666", marginTop: "0.25rem" }}>Sign in to your account</p>
         </div>
 
-        <form
-          onSubmit={(e) => e.preventDefault()}
-          style={{ display: "grid", gap: "0.75rem" }}
-          aria-label="Sign in form"
-        >
+        <form onSubmit={handleSubmit} style={{ display: "grid", gap: "0.75rem" }} aria-label="Sign in form">
           <label style={{ display: "grid" }}>
             <span style={{ fontSize: 14, color: "#666" }}>Email</span>
             <input
               type="email"
               placeholder="you@example.com"
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               style={{ padding: "0.6rem", borderRadius: 6, border: "1px solid #ddd" }}
             />
           </label>
@@ -31,23 +44,14 @@ export default function SignIn() {
               type="password"
               placeholder="••••••••"
               required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               style={{ padding: "0.6rem", borderRadius: 6, border: "1px solid #ddd" }}
             />
           </label>
 
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <label className="remember">
-              <input type="checkbox" aria-label="Remember me" />
-              <span className="remember__switch">
-                <span className="remember__knob" />
-              </span>
-              <span className="remember__text">Remember me</span>
-            </label>
-            <a href="#" style={{ color: "#0b74de", fontSize: 14 }}>Forgot?</a>
-          </div>
-
           <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.25rem" }}>
-            <button className="flw-btn flw-btn--primary" style={{ flex: 1 }} onClick={(e) => e.preventDefault()}>
+            <button type="submit" className="flw-btn flw-btn--primary" style={{ flex: 1 }}>
               Sign In
             </button>
           </div>

@@ -91,6 +91,10 @@
     font-weight: 600;
     color: var(--flw-text);
     background: transparent;
+    text-decoration: none; /* prevent underline on link buttons */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .flw-btn--ghost {
@@ -108,6 +112,16 @@
 
 .flw-btn--primary:hover {
     filter: brightness(.95);
+}
+
+/* ensure no underline on navbar auth link buttons */
+a.flw-btn,
+a.flw-btn:link,
+a.flw-btn:visited,
+a.flw-btn:hover,
+a.flw-btn:active,
+a.flw-btn:focus {
+    text-decoration: none;
 }
 
 .flw-logo {

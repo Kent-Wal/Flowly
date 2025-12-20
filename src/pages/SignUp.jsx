@@ -1,6 +1,31 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function SignUp() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    if(confirmPassword !== password){
+        setError("Passwords do not match!");
+        return; 
+    }
+
+    //clear the error
+    setError("");
+
+    fetch('/auth/register', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({name, email, password})
+    }); 
+  }
+
   return (
     <main style={{ display: "flex", justifyContent: "center", padding: "3rem" }}>
       <div style={{ width: 480, maxWidth: "95%" }}>
@@ -9,17 +34,15 @@ export default function SignUp() {
           <p style={{ color: "#666", marginTop: "0.25rem" }}>Start managing your finances — no credit card required.</p>
         </div>
 
-        <form
-          onSubmit={(e) => e.preventDefault()}
-          style={{ display: "grid", gap: "0.75rem" }}
-          aria-label="Sign up form"
-        >
+        <form onSubmit={handleSubmit} style={{ display: "grid", gap: "0.75rem" }} aria-label="Sign up form">
           <label style={{ display: "grid" }}>
             <span style={{ fontSize: 14, color: "#666" }}>Full name</span>
             <input
               type="text"
               placeholder="First Last"
               required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               style={{ padding: "0.6rem", borderRadius: 6, border: "1px solid #ddd" }}
             />
           </label>
@@ -30,6 +53,8 @@ export default function SignUp() {
               type="email"
               placeholder="you@example.com"
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               style={{ padding: "0.6rem", borderRadius: 6, border: "1px solid #ddd" }}
             />
           </label>
@@ -40,6 +65,8 @@ export default function SignUp() {
               type="password"
               placeholder="Create a password"
               required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               style={{ padding: "0.6rem", borderRadius: 6, border: "1px solid #ddd" }}
             />
           </label>
@@ -50,12 +77,18 @@ export default function SignUp() {
               type="password"
               placeholder="Re-enter password"
               required
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               style={{ padding: "0.6rem", borderRadius: 6, border: "1px solid #ddd" }}
             />
           </label>
 
+          {error ? (
+            <div style={{ color: "#d04545", fontSize: 14, marginBottom: 6 }}>{error}</div>
+          ) : null}
+
           <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.25rem" }}>
-            <button className="flw-btn flw-btn--primary" style={{ flex: 1 }} onClick={(e) => e.preventDefault()}>
+            <button type="submit" className="flw-btn flw-btn--primary" style={{ flex: 1 }}>
               Create account
             </button>
           </div>
