@@ -8,6 +8,11 @@ const PORT = process.env.PORT || 5000;
 //routes
 app.use('/auth', authRoutes);
 
+// health/root route
+app.get('/', (req, res) => {
+    res.send('API running — use /auth or the frontend at :5173');
+});
+
 app.listen(PORT, () => {
     console.log(`Server has started on port: ${PORT}`);
 });

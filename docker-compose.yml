@@ -1,25 +1,30 @@
 services:
   app:
     build: .
-    container_name: Flowly
-    command: sh -c "npx prisma generate && npm run dev"
+    container_name: flowly
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/flowly
+      - JWT_SECRET=your_jwt_secret_here
+      - NODE_ENV=development
+      - PORT=5000
+    ports:
+      - "5173:5173"
+      - "5000:5000"
+    depends_on:
+      - db
     volumes:
       - .:/app
       - /app/node_modules
-    ports:
-      - "5173:5173" # Vite default
+    env_file:
+      - .env
+    command: sh -c "npx prisma generate && npm run dev:all"
+  
+  db:
+    image: postgres:13-alpine
+    container_name: flowly-db
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/flowly
-    depends_on:
-      - postgres-db
-
-  postgres-db:
-    image: postgres:15
-    container_name: flowly-postgres
-    restart: always
-    environment:
-      POSTGRES_USER: flowly_user
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: flowly
     ports:
       - "5432:5432"

@@ -20,4 +20,4 @@ RUN npx prisma generate
 EXPOSE 5173
 
 # Define the command to run the application
-CMD ["node", "run", "dev:all"]
+CMD ["npm", "run", "dev:all"]
