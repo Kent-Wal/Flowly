@@ -58,6 +58,9 @@ router.post('/login', async (req, res) =>{
             return res.status(401).send({message: 'Incorrect Password.'});
         }
 
+        //return the logged in user
+        console.log(userFound);
+
         //now we can create the token because only valid users are left
         const token = jwt.sign({id: userFound.id}, process.env.JWT_SECRET, {expiresIn: '24h'});
 

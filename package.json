@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start:server": "node src/server/server.js",
+    "start:server": "nodemon --watch src --legacy-watch src/server/server.js",
     "dev:all": "concurrently \"npm run start:server\" \"npm run dev\""
   },
   "dependencies": {
@@ -35,6 +35,7 @@
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.4.0",
     "prisma": "^7.2.0",
-    "vite": "^7.1.7"
+    "vite": "^7.1.7",
+    "nodemon": "^2.0.22"
   }
 }
