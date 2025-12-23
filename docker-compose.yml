@@ -1,0 +1,31 @@
+services:
+  app:
+    build: .
+    container_name: Flowly
+    command: sh -c "npx prisma generate && npm run dev"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173" # Vite default
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/flowly
+    depends_on:
+      - postgres-db
+
+  postgres-db:
+    image: postgres:15
+    container_name: flowly-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: flowly_user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: flowly
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
+  node_modules:
