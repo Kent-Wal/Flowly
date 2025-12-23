@@ -1,0 +1,22 @@
+### Get root directory
+GET http://localhost:5173
+
+### register a user (POST /auth/register)
+POST http://localhost:5173/signup/auth/register
+Content-Type: application/json
+
+// data to send
+{
+    "email": "test@gmail.com",
+    "password": "123123",
+    "name": "John Doe"
+}
+
+### login a user (POST /auth/login)
+POST http://localHost:5173/signin/auth/login
+Content-Type: application/json
+
+{
+    "email": "test@gmail.com",
+    "password": "123123"
+}
