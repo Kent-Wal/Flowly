@@ -11,7 +11,7 @@ export default function SignUp() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const apiBase = '';
+    const apiBase = '/';
 
     if(confirmPassword !== password){
         setError("Passwords do not match!");
@@ -21,7 +21,7 @@ export default function SignUp() {
     //clear the error
     setError("");
 
-    fetch(apiBase +'/auth/register', {
+    fetch(apiBase +'auth/register', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({name, email, password})

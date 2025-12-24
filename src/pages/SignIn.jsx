@@ -9,10 +9,10 @@ export default function SignIn() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const apiBase = '/signin';
+    const apiBase = '/';
 
     //dont need to check if the email is valid (ie. contains '@') html already does this
-    await fetch(apiBase + '/auth/login', {
+    await fetch(apiBase + 'auth/login', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({email, password})
