@@ -15,7 +15,7 @@ export default function SignIn() {
     setError("");
     try {
       await authUser('login', { email, password });
-      navigate('/dashboard');
+      navigate('/');  //navigates to the dashboard
     } catch (err) {
       setError(err.message || 'Login failed');
     }

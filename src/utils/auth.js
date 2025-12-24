@@ -30,9 +30,23 @@ export async function authUser(action, payload) {
   // store token for later requests
   localStorage.setItem('authToken', token);
 
+  // notify other parts of the app in this window
+  try {
+    window.dispatchEvent(new CustomEvent('authChanged', { detail: { token } }));
+  } catch (e) {
+    // ignore if window not available (e.g., server-side)
+  }
+
   return data;
 }
 
 export function getAuthToken() {
   return localStorage.getItem('authToken');
+}
+
+export function logout() {
+  localStorage.removeItem('authToken');
+  try {
+    window.dispatchEvent(new CustomEvent('authChanged', { detail: { token: null } }));
+  } catch (e) {}
 }

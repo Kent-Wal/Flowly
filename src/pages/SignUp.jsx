@@ -23,7 +23,7 @@ export default function SignUp() {
     try {
       await authUser('register', { name, email, password });
       // on success authUser stored the token
-      navigate('/dashboard');
+      navigate('/');    //navigate to the dashboard
     } catch (err) {
       setError(err.message || 'Registration failed');
     }

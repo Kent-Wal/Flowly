@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./navbar.css";
+import { getAuthToken, logout } from "../utils/auth";
 
 const MENU_ITEMS = [
   { label: "Dashboard", to: "/" },
@@ -12,6 +13,27 @@ const MENU_ITEMS = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setIsLoggedIn(Boolean(getAuthToken()));
+
+    function onStorage(e) {
+      if (e.key === 'authToken') setIsLoggedIn(Boolean(e.newValue));
+    }
+
+    function onAuthChanged() {
+      setIsLoggedIn(Boolean(getAuthToken()));
+    }
+
+    window.addEventListener('storage', onStorage);
+    window.addEventListener('authChanged', onAuthChanged);
+    return () => {
+      window.removeEventListener('storage', onStorage);
+      window.removeEventListener('authChanged', onAuthChanged);
+    };
+  }, []);
 
   return (
     <header className="flw-nav">
@@ -40,8 +62,23 @@ export default function Navbar() {
         {/* Right: Auth buttons and Logo slot */}
         <div className="flw-right">
           <div className="flw-auth">
-            <Link to="/signin" className="flw-btn flw-btn--ghost">Sign In</Link>
-            <Link to="/signup" className="flw-btn flw-btn--primary">Sign Up</Link>
+            {isLoggedIn ? (
+              <button
+                className="flw-btn flw-btn--ghost"
+                onClick={() => {
+                  logout();
+                  setIsLoggedIn(false);
+                  navigate('/');
+                }}
+              >
+                Sign Out
+              </button>
+            ) : (
+              <>
+                <Link to="/signin" className="flw-btn flw-btn--ghost">Sign In</Link>
+                <Link to="/signup" className="flw-btn flw-btn--primary">Sign Up</Link>
+              </>
+            )}
           </div>
 
           {/* Mobile burger */}
