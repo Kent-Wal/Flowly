@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { authUser } from "../utils/auth";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -7,25 +8,25 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const apiBase = '/';
-
-    if(confirmPassword !== password){
-        setError("Passwords do not match!");
-        return; 
+    if (confirmPassword !== password) {
+      setError("Passwords do not match!");
+      return;
     }
 
-    //clear the error
     setError("");
 
-    fetch(apiBase +'auth/register', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({name, email, password})
-    }); 
+    try {
+      await authUser('register', { name, email, password });
+      // on success authUser stored the token
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.message || 'Registration failed');
+    }
   }
 
   return (

@@ -1,22 +1,24 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./auth.css";
+import { authUser } from "../utils/auth";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const apiBase = '/';
-
-    //dont need to check if the email is valid (ie. contains '@') html already does this
-    await fetch(apiBase + 'auth/login', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({email, password})
-    }); 
+    setError("");
+    try {
+      await authUser('login', { email, password });
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.message || 'Login failed');
+    }
   }
 
   return (
@@ -57,6 +59,10 @@ export default function SignIn() {
               Sign In
             </button>
           </div>
+
+          {error ? (
+            <div style={{ color: '#d04545', fontSize: 14, marginTop: 6 }}>{error}</div>
+          ) : null}
 
           <div style={{ textAlign: "center", paddingTop: "0.5rem", color: "#555" }}>
             Don’t have an account? <Link to="/signup">Sign up</Link>
