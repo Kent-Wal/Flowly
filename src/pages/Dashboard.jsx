@@ -2,6 +2,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./pages.css";
+import ConnectPlaid from "../components/ConnectPlaid";
 
 export default function Dashboard() {
   return (
@@ -9,6 +10,9 @@ export default function Dashboard() {
       <header className="flw-page-header">
         <h1 className="flw-h1">Dashboard</h1>
         <p className="flw-sub">High-level financial overview</p>
+        <div>
+          <ConnectPlaid />
+        </div>
       </header>
 
       <section className="grid-4">

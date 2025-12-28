@@ -50,3 +50,19 @@ export function logout() {
     window.dispatchEvent(new CustomEvent('authChanged', { detail: { token: null } }));
   } catch (e) {}
 }
+
+// Decode stored JWT and return the user id if present. Returns null if token missing/invalid.
+export function getUserId() {
+  const token = getAuthToken();
+  if (!token) return null;
+  try {
+    const parts = token.split('.');
+    if (parts.length < 2) return null;
+    const payload = parts[1];
+    // atob is available in browsers; fall back if needed
+    const json = JSON.parse(decodeURIComponent(escape(window.atob(payload))));
+    return json?.id ?? null;
+  } catch (e) {
+    return null;
+  }
+}
