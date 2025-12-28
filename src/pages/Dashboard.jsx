@@ -1,5 +1,6 @@
 // src/pages/Dashboard.jsx
 import React from "react";
+import { Link } from "react-router-dom";
 import "./pages.css";
 
 export default function Dashboard() {
@@ -59,7 +60,7 @@ export default function Dashboard() {
         <div className="card">
           <div className="card-head">
             <h2>Recent transactions</h2>
-            <a className="link">View all →</a>
+            <Link to="/transactions" className="link">View all →</Link>
           </div>
           <ul className="list">
             <li>

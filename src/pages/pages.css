@@ -106,6 +106,7 @@
 .link {
     color: var(--cyan);
     cursor: pointer;
+    text-decoration: none;
 }
 
 .pill-list {

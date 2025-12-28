@@ -29,58 +29,6 @@ export default function Settings() {
             </li>
           </ul>
         </div>
-
-        <div className="card">
-          <div className="card-head">
-            <h2>Profile</h2>
-            <button className="chip">Edit</button>
-          </div>
-          <div className="form-grid">
-            <label>
-              <span className="muted">Name</span>
-              <input className="input" defaultValue="Jordan Lee" />
-            </label>
-            <label>
-              <span className="muted">Email</span>
-              <input className="input" defaultValue="jordan@example.com" />
-            </label>
-            <label>
-              <span className="muted">Dark mode</span>
-              <div className="switch">
-                <input type="checkbox" defaultChecked />
-                <span />
-              </div>
-            </label>
-            <label>
-              <span className="muted">Two-factor auth</span>
-              <div className="switch">
-                <input type="checkbox" />
-                <span />
-              </div>
-            </label>
-          </div>
-        </div>
-      </section>
-
-      <section className="card">
-        <div className="card-head">
-          <h2>Security</h2>
-        </div>
-        <div className="form-grid">
-          <label>
-            <span className="muted">Current password</span>
-            <input className="input" type="password" />
-          </label>
-          <label>
-            <span className="muted">New password</span>
-            <input className="input" type="password" />
-          </label>
-          <label>
-            <span className="muted">Confirm new password</span>
-            <input className="input" type="password" />
-          </label>
-          <button className="btn-primary">Change password</button>
-        </div>
       </section>
     </div>
   );
