@@ -31,3 +31,20 @@ Content-Type: application/json
     "email": "test@gmail.com",
     "password": "123123"
 }
+
+### connect a plaid sandbox account
+POST http://localhost:5173/plaid/create_link_token
+Content-Type: application/json
+
+{
+    "userId": "123456"
+}
+
+### 
+POST http://localhost:5173/plaid/exchange_public_token
+Content-Type: application/json
+
+{
+    "userId": "123456",
+    "public_token": "123456789"
+}
