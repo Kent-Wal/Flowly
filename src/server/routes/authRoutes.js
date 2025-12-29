@@ -4,71 +4,76 @@ import jwt from 'jsonwebtoken';
 import prisma from '../prismaClient.js';
 
 const router = express.Router();
-
-//register a new user
+// Register a new user
 router.post('/register', async (req, res) => {
-    const {name, email, password} = req.body;
+    const { name, email, password } = req.body;
 
-    //encrypt the password
+    if (!email || !password || !name) {
+        return res.status(400).json({ error: 'Name, email and password are required' });
+    }
+
+    // encrypt the password
     const hashedPassword = bcrypt.hashSync(password, 10);
 
-    //add name, email, password to the database
-    try{
-        //send the data to prisma
+    try {
+        // Quick existence check to provide immediate 409 for UX (race still handled by unique constraint)
+        const existing = await prisma.user.findUnique({ where: { email } });
+        if (existing) {
+            return res.status(409).json({ error: 'Email already in use' });
+        }
+
         const user = await prisma.user.create({
             data: {
-                email: email,
+                email,
                 password: hashedPassword,
-                name: name
-            }
+                name,
+            },
         });
 
-        //create the token for the user
-        const token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: '24h'});
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '24h' });
+        return res.status(201).json({ token });
+    } catch (err) {
+        console.error('Register error:', err);
 
-        //return the status and the token to the browser
-        return res.status(201).json({token});
-    }
-    catch(err){
-        console.log(err.message);
-        return res.status(503).json({error: 'Service Unavailable'})
+        // handle common Prisma unique constraint error for email (P2002)
+        if (err && err.code === 'P2002' && err.meta && err.meta.target && err.meta.target.includes('email')) {
+            return res.status(409).json({ error: 'Email already in use' });
+        }
+
+        return res.status(500).json({ error: 'Internal Server Error', detail: err?.message });
     }
 });
 
-//login a user
-router.post('/login', async (req, res) =>{
-    const {email, password} = req.body;
+// Login a user
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body;
 
-    try{
-        //check to make sure the email entered exists
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    try {
         const userFound = await prisma.user.findUnique({
             where: {
-                email: email
-            }
+                email,
+            },
         });
 
-        if(!userFound){
-            return res.status(404).send({message: 'User not found.'});
+        if (!userFound) {
+            return res.status(404).json({ message: 'User not found.' });
         }
 
-        //encrypt password the user entered because we need to check it with a password that is already encrypted in the database
         const validPassword = bcrypt.compareSync(password, userFound.password);
-
-        if(!validPassword){
-            return res.status(401).send({message: 'Incorrect Password.'});
+        if (!validPassword) {
+            return res.status(401).json({ message: 'Incorrect Password.' });
         }
 
-        //now we can create the token because only valid users are left
-        const token = jwt.sign({id: userFound.id}, process.env.JWT_SECRET, {expiresIn: '24h'});
-
-        //return token and status
-        return res.status(200).json({token});
+        const token = jwt.sign({ id: userFound.id }, process.env.JWT_SECRET, { expiresIn: '24h' });
+        return res.status(200).json({ token });
+    } catch (err) {
+        console.error('Login error:', err);
+        return res.status(500).json({ error: 'Internal Server Error', detail: err?.message });
     }
-    catch(err){
-        console.log(err.message);
-        return res.send(503).json({error: 'Service Unavailable'});
-    }
-     
 });
 
 export default router;

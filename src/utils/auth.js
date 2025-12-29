@@ -12,7 +12,8 @@ export async function authUser(action, payload) {
   const data = await res.json().catch(() => null);
 
   if (!res.ok) {
-    const msg = data?.message || `Request failed (${res.status})`;
+    // Prefer `error` or `message` fields from the server response so the UI can show a friendly message
+    const msg = data?.error || data?.message || `Request failed (${res.status})`;
     const err = new Error(msg);
     err.status = res.status;
     err.body = data;

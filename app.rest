@@ -28,7 +28,7 @@ POST http://localHost:5173/auth/login
 Content-Type: application/json
 
 {
-    "email": "test@gmail.com",
+    "email": "test2@gmail.com",
     "password": "123123"
 }
 
