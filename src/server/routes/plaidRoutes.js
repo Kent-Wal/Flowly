@@ -1,6 +1,7 @@
 import express from 'express';
 import prisma from '../prismaClient.js';
 import plaidClient from '../../utils/plaid.js';
+import syncAccountsForItem from '../services/plaidSync.js';
 
 const router = express.Router();
 
@@ -88,52 +89,11 @@ router.post('/exchange_public_token', async (req, res) => {
             console.warn('Failed to call itemGet on Plaid', e?.message || e);
         }
 
-        // Fetch accounts for the item and persist them to the Account table.
+        // Delegate accounts retrieval & persistence to the sync service.
         try {
-            const accountsRes = await plaidClient.accountsGet({ access_token });
-            const accounts = accountsRes?.data?.accounts || [];
-            for (const acct of accounts) {
-                try {
-                    const plaidAccountId = acct.account_id;
-                    const name = acct.name || 'Unknown';
-                    const officialName = acct.official_name || null;
-                    const mask = acct.mask || null;
-                    const institutionIdField = acct.institution_id || institutionId || null;
-                    const currency = acct.balances?.iso_currency_code || acct.iso_currency_code || null;
-                    const balanceNum = (acct.balances && (acct.balances.current ?? acct.balances.available ?? 0)) || 0;
-                    const balanceStr = Number(balanceNum).toFixed(2);
-
-                    await prisma.account.upsert({
-                        where: { plaidAccountId: String(plaidAccountId) },
-                        update: {
-                            name,
-                            officialName,
-                            mask,
-                            institutionId: institutionIdField,
-                            currency,
-                            balance: balanceStr,
-                            updatedAt: new Date(),
-                            userId: userIdNum,
-                            itemId: itemRecord.id,
-                        },
-                        create: {
-                            plaidAccountId: String(plaidAccountId),
-                            name,
-                            officialName,
-                            mask,
-                            institutionId: institutionIdField,
-                            currency,
-                            balance: balanceStr,
-                            userId: userIdNum,
-                            itemId: itemRecord.id,
-                        }
-                    });
-                } catch (e) {
-                    console.warn('Failed to persist account', acct?.account_id, e?.message || e);
-                }
-            }
+            await syncAccountsForItem({ accessToken: access_token, itemId: itemRecord.id, userId: userIdNum, institutionId });
         } catch (e) {
-            console.warn('Failed to fetch accounts from Plaid', e?.message || e);
+            console.warn('Failed to sync accounts for item', item_id, e?.message || e);
         }
 
         res.status(200).json({ access_token, item_id });
