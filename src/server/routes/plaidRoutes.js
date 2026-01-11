@@ -1,7 +1,7 @@
 import express from 'express';
 import prisma from '../prismaClient.js';
 import plaidClient from '../../utils/plaid.js';
-import syncAccountsForItem from '../services/plaidSync.js';
+import { syncTransactionsForItem, syncAccountsForItem } from '../services/plaidSync.js';
 
 const router = express.Router();
 
@@ -94,6 +94,17 @@ router.post('/exchange_public_token', async (req, res) => {
             await syncAccountsForItem({ accessToken: access_token, itemId: itemRecord.id, userId: userIdNum, institutionId });
         } catch (e) {
             console.warn('Failed to sync accounts for item', item_id, e?.message || e);
+        }
+
+        // Sync recent transactions (default to last 90 days)
+        try {
+            const start = new Date();
+            start.setDate(start.getDate() - 90);
+            const startDate = start.toISOString().slice(0, 10);
+            const endDate = new Date().toISOString().slice(0, 10);
+            await syncTransactionsForItem({ accessToken: access_token, itemId: itemRecord.id, userId: userIdNum, startDate, endDate });
+        } catch (e) {
+            console.warn('Failed to sync transactions for item', item_id, e?.message || e);
         }
 
         res.status(200).json({ access_token, item_id });
