@@ -18,3 +18,4 @@ If you are developing a production application, we recommend using TypeScript wi
 
 run "nvm use 25.0.0" in terminal to set up npm
 run "npm run dev" in terminal 
+make sure user runs "npx prisma migrate dev --name init" to set up the schema and db
