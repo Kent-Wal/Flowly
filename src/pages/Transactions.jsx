@@ -1,6 +1,8 @@
 // src/pages/Transactions.jsx
 import React from "react";
 import "./pages.css";
+import { Navigate } from "react-router-dom";
+import { getAuthToken } from "../utils/auth";
 
 const rows = Array.from({ length: 10 }).map((_, i) => ({
   date: "2025-10-0" + ((i % 9) + 1),
@@ -11,6 +13,10 @@ const rows = Array.from({ length: 10 }).map((_, i) => ({
 }));
 
 export default function Transactions() {
+  const isLoggedIn = Boolean(getAuthToken());
+  
+  if (!isLoggedIn) { return <Navigate to="/signin" />; }
+
   return (
     <div className="flw-page">
       <header className="flw-page-header">

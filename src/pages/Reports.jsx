@@ -1,8 +1,14 @@
 // src/pages/Reports.jsx
 import React from "react";
 import "./pages.css";
+import { getAuthToken } from "../utils/auth";
+import { Navigate } from "react-router-dom";
 
 export default function Reports() {
+  const isLoggedIn = Boolean(getAuthToken());
+  
+  if (!isLoggedIn) { return <Navigate to="/signin" />; }
+
   return (
     <div className="flw-page">
       <header className="flw-page-header">

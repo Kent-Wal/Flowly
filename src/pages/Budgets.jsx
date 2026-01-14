@@ -1,6 +1,8 @@
 // src/pages/Budgets.jsx
 import React from "react";
 import "./pages.css";
+import { getAuthToken } from "../utils/auth";
+import { Navigate } from "react-router-dom";
 
 const items = [
   { name: "Groceries", limit: 400, used: 260, color: "cyan" },
@@ -10,6 +12,10 @@ const items = [
 ];
 
 export default function Budgets() {
+  const isLoggedIn = Boolean(getAuthToken());
+  
+  if (!isLoggedIn) { return <Navigate to="/signin" />; }
+
   return (
     <div className="flw-page">
       <header className="flw-page-header">

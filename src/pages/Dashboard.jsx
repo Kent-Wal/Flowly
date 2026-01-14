@@ -1,15 +1,19 @@
 // src/pages/Dashboard.jsx
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import "./pages.css";
 import ConnectPlaid from "../components/ConnectPlaid";
+import { getAuthToken } from "../utils/auth";
 
 export default function Dashboard() {
+  const isLoggedIn = Boolean(getAuthToken());
+  
+  if (!isLoggedIn) { return <Navigate to="/signin" />; }
+
   return (
     <div className="flw-page">
       <header className="flw-page-header">
         <h1 className="flw-h1">Dashboard</h1>
-        <p className="flw-sub">High-level financial overview</p>
         <div>
           <ConnectPlaid />
         </div>

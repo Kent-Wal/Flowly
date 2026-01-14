@@ -1,13 +1,18 @@
 // src/pages/Settings.jsx
 import React from "react";
 import "./pages.css";
+import { getAuthToken } from "../utils/auth";
+import { Navigate } from "react-router-dom";
 
 export default function Settings() {
+  const isLoggedIn = Boolean(getAuthToken());
+  
+  if (!isLoggedIn) { return <Navigate to="/signin" />; }
+
   return (
     <div className="flw-page">
       <header className="flw-page-header">
         <h1 className="flw-h1">Settings</h1>
-        <p className="flw-sub">Manage preferences and connections</p>
       </header>
 
       <section className="grid-2">

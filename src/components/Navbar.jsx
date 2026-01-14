@@ -68,7 +68,7 @@ export default function Navbar() {
                 onClick={() => {
                   logout();
                   setIsLoggedIn(false);
-                  navigate('/');
+                  navigate('/signin');
                 }}
               >
                 Sign Out
