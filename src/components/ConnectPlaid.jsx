@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getUserId } from '../utils/auth';
+import { getAuthToken } from '../utils/auth';
 
 // Plaid Link implementation that loads the Plaid script directly.
 // Expects server routes:
@@ -11,6 +12,7 @@ export default function ConnectPlaid({ userId, children }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const plaidHandlerRef = useRef(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(Boolean(getAuthToken()));
 
   // Shared helper to load Plaid script only once and return a promise
   function loadPlaidScript() {
@@ -168,6 +170,25 @@ export default function ConnectPlaid({ userId, children }) {
       setError('Failed to open Plaid Link');
     }
   };
+
+  useEffect(() => {
+    function handleAuth() {
+      setIsLoggedIn(Boolean(getAuthToken()));
+    }
+
+    function onStorage(e) {
+      if (e.key === 'authToken') handleAuth();
+    }
+
+    window.addEventListener('authChanged', handleAuth);
+    window.addEventListener('storage', onStorage);
+    return () => {
+      window.removeEventListener('authChanged', handleAuth);
+      window.removeEventListener('storage', onStorage);
+    };
+  }, []);
+
+  if (!isLoggedIn) return null;
 
   return (
     <div>
