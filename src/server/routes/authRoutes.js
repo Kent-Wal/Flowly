@@ -76,4 +76,34 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// Get current user and their accounts (requires Authorization: Bearer <token>)
+router.get('/me', async (req, res) => {
+    try {
+        const auth = req.headers.authorization || '';
+        const token = auth.replace(/^Bearer\s+/i, '').trim();
+        if (!token) return res.status(401).json({ error: 'Missing auth token' });
+
+        let payload;
+        try {
+            payload = jwt.verify(token, process.env.JWT_SECRET);
+        } catch (e) {
+            return res.status(401).json({ error: 'Invalid token' });
+        }
+
+        const user = await prisma.user.findUnique({
+            where: { id: payload.id },
+            include: { accounts: { include: { item: true } } },
+        });
+
+        if (!user) return res.status(404).json({ error: 'User not found' });
+
+        // remove sensitive fields
+        const { password, ...safeUser } = user;
+        return res.status(200).json({ user: safeUser });
+    } catch (err) {
+        console.error('/auth/me error', err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 export default router;
