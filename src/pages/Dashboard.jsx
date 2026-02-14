@@ -86,9 +86,9 @@ export default function Dashboard() {
           <div className="stat-value">{formatMoney(monthlySpend)}</div>
           <div className="sparkline negative" />
         </div>
-        <div className="card" style={{ gridColumn: 'span 2' }}>
+        <div className="card accounts-card" style={{ gridColumn: 'span 2' }}>
           <h3 className="muted">Accounts</h3>
-          <div style={{ maxHeight: 220, overflowY: 'auto', marginTop: 8 }}>
+          <div className="accounts-list">
             <ul className="list">
               {accounts.length === 0 ? (
                 <li className="muted">No linked accounts</li>
