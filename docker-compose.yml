@@ -21,7 +21,7 @@ services:
     command: sh -c "npx prisma generate && npm run dev:all"
   
   db:
-    image: postgres:16
+    image: postgres:13
     container_name: flowly-db
     environment:
       POSTGRES_USER: postgres
