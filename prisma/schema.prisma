@@ -69,6 +69,12 @@ model Transaction {
   pending            Boolean   @default(false)
   merchantName       String?
   category           String?
+  // Application-mapped category (e.g. "Transportation", "Groceries")
+  appCategory        String?
+  // Plaid category id (e.g. "13005000") for stable grouping
+  plaidCategoryId    String?
+  // Full Plaid category hierarchy as JSON (e.g. ["Food and Drink","Restaurants"])
+  categoryHierarchy  Json?
   isoCurrencyCode    String?
   date               DateTime
   authorizedDate     DateTime?
@@ -79,4 +85,13 @@ model Transaction {
 
   @@index([accountId])
   @@index([date])
+}
+
+// Map Plaid category identifiers or top-level category names to app category labels
+model CategoryMap {
+  id            Int     @id @default(autoincrement())
+  plaidCategory String  @unique
+  appCategory   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }

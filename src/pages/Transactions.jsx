@@ -167,8 +167,8 @@ export default function Transactions() {
                   </td>
                   <td>{t.account?.name || '—'}</td>
                   <td className="right">
-                    <span className={t.amount < 0 ? "amount negative" : "amount positive"}>
-                      {t.amount < 0 ? "-" : "+"} ${Math.abs(Number(t.amount || 0)).toFixed(2)}
+                    <span className={t.amount > 0 ? "amount negative" : "amount positive"}>
+                      {t.amount > 0 ? "-" : "+"} ${Math.abs(Number(t.amount || 0)).toFixed(2)}
                     </span>
                   </td>
                 </tr>

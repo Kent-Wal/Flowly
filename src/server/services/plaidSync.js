@@ -1,5 +1,6 @@
 import prisma from '../prismaClient.js';
 import plaidClient from '../../utils/plaid.js';
+import { mapPlaidCategory } from './categoryMapper.js';
 
 export async function syncAccountsForItem({ accessToken, itemId, userId, institutionId = null }) {
     if (!accessToken) throw new Error('accessToken required');
@@ -73,25 +74,49 @@ export async function syncTransactionsForItem({ accessToken, itemId, userId, sta
                 options: { count: pageSize, offset }
             });
             const transactions = txRes?.data?.transactions || [];
+            console.log('syncTransactionsForItem: fetched', transactions.length, 'transactions (offset', offset, ') for item', itemId);
             for (const tx of transactions) {
                 try {
                     const plaidTransactionId = tx.transaction_id;
                     const plaidAccountId = tx.account_id;
 
-                    // map to internal account.id
-                    const accountRecord = await prisma.account.findUnique({ where: { plaidAccountId: String(plaidAccountId) } });
+                    // map to internal account.id — ensure we match the account that belongs to this Item
+                    // prefer matching both plaidAccountId and itemId to avoid assigning transactions to a different user's account
+                    const accountRecord = await prisma.account.findFirst({ where: { plaidAccountId: String(plaidAccountId), itemId } });
+                    if (!accountRecord) {
+                        console.warn('syncTransactionsForItem: no local account for plaidAccountId', plaidAccountId, 'itemId', itemId, 'skipping transaction', plaidTransactionId);
+                        continue;
+                    }
                     if (!accountRecord) {
                         console.warn('syncTransactionsForItem: no local account for plaidAccountId', plaidAccountId, 'skipping transaction', plaidTransactionId);
                         continue;
                     }
 
                     const merchantName = tx.merchant_name || tx.name || null;
-                    const category = Array.isArray(tx.category) ? tx.category.join(' > ') : (tx.category?.[0] ?? null);
+                    // Preserve Plaid category hierarchy and id for richer UX and stable grouping
+                    const categoryHierarchy = Array.isArray(tx.category) ? tx.category : (tx.category ? [tx.category] : null);
+                    const topCategory = Array.isArray(tx.category) ? (tx.category[0] ?? null) : (tx.category ?? null);
+                    const plaidCategoryId = tx.category_id ?? null;
                     const isoCurrencyCode = tx.iso_currency_code || null;
                     const pending = Boolean(tx.pending);
                     const amount = tx.amount ?? 0;
                     const date = tx.date;
                     const authorizedDate = tx.authorized_date || null;
+
+                                        // First try DB mappings (by plaidCategoryId or topCategory), then fall back to heuristics
+                                        let appCategory = null;
+                                        try {
+                                            const mapKey = plaidCategoryId || topCategory || null;
+                                            if (mapKey) {
+                                                const mapRec = await prisma.categoryMap.findUnique({ where: { plaidCategory: String(mapKey) } }).catch(() => null);
+                                                if (mapRec) appCategory = mapRec.appCategory;
+                                            }
+                                        } catch (e) {
+                                            console.warn('categoryMap lookup failed', e?.message || e);
+                                        }
+                                        if (!appCategory) {
+                                            appCategory = mapPlaidCategory({ topCategory, categoryHierarchy, merchantName, plaidCategoryId });
+                                        }
 
                     await prisma.transaction.upsert({
                         where: { plaidTransactionId: String(plaidTransactionId) },
@@ -100,7 +125,10 @@ export async function syncTransactionsForItem({ accessToken, itemId, userId, sta
                             amount,
                             pending,
                             merchantName,
-                            category,
+                            category: topCategory,
+                            appCategory,
+                            plaidCategoryId,
+                            categoryHierarchy,
                             isoCurrencyCode,
                             date: new Date(date),
                             authorizedDate: authorizedDate ? new Date(authorizedDate) : null,
@@ -112,7 +140,10 @@ export async function syncTransactionsForItem({ accessToken, itemId, userId, sta
                             amount,
                             pending,
                             merchantName,
-                            category,
+                            category: topCategory,
+                            appCategory,
+                            plaidCategoryId,
+                            categoryHierarchy,
                             isoCurrencyCode,
                             date: new Date(date),
                             authorizedDate: authorizedDate ? new Date(authorizedDate) : null,

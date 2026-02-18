@@ -91,18 +91,22 @@ router.post('/exchange_public_token', async (req, res) => {
 
         // Delegate accounts retrieval & persistence to the sync service.
         try {
+            console.log('plaidRoutes: starting accounts sync for item', itemRecord.id);
             await syncAccountsForItem({ accessToken: access_token, itemId: itemRecord.id, userId: userIdNum, institutionId });
+            console.log('plaidRoutes: accounts sync complete for item', itemRecord.id);
         } catch (e) {
             console.warn('Failed to sync accounts for item', item_id, e?.message || e);
         }
 
         // Sync recent transactions (default to last 90 days)
         try {
+            console.log('plaidRoutes: starting transactions sync for item', itemRecord.id);
             const start = new Date();
             start.setDate(start.getDate() - 90);
             const startDate = start.toISOString().slice(0, 10);
             const endDate = new Date().toISOString().slice(0, 10);
-            await syncTransactionsForItem({ accessToken: access_token, itemId: itemRecord.id, userId: userIdNum, startDate, endDate });
+            const result = await syncTransactionsForItem({ accessToken: access_token, itemId: itemRecord.id, userId: userIdNum, startDate, endDate });
+            console.log('plaidRoutes: transactions sync complete for item', itemRecord.id, 'result=', result);
         } catch (e) {
             console.warn('Failed to sync transactions for item', item_id, e?.message || e);
         }

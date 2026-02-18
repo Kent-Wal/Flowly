@@ -19,12 +19,40 @@ router.get('/', async (req, res) => {
       return res.status(401).json({ error: 'Invalid token' });
     }
 
-    const transactions = await prisma.transaction.findMany({
-      where: { account: { userId: payload.id } },
-      include: { account: true },
-      orderBy: { date: 'desc' },
-      take: 500,
-    });
+    let transactions;
+    try {
+      transactions = await prisma.transaction.findMany({
+        where: { account: { userId: payload.id } },
+        include: { account: true },
+        orderBy: { date: 'desc' },
+        take: 500,
+      });
+    } catch (e) {
+      // If Prisma fails due to a schema/column mismatch (P2022), fall back to a raw SQL
+      // query selecting a minimal set of columns so the API can still return data.
+      if (e && e.code === 'P2022') {
+        console.warn('/transactions fallback raw query due to Prisma P2022', e.meta || '');
+        const rows = await prisma.$queryRawUnsafe(
+          `SELECT t.id, t.amount::text AS amount, t.date::text AS date, t.merchantName, t.pending, a.id AS account_id, a.userId
+           FROM "Transaction" t
+           JOIN "Account" a ON a.id = t.accountId
+           WHERE a."userId" = $1
+           ORDER BY t.date DESC
+           LIMIT 500`,
+          payload.id
+        );
+        transactions = rows.map((r) => ({
+          id: r.id,
+          amount: Number(r.amount),
+          date: r.date,
+          merchantName: r.merchantname || r.merchantName,
+          pending: r.pending,
+          account: { id: r.account_id, userId: r.userid || r.userId },
+        }));
+      } else {
+        throw e;
+      }
+    }
 
     return res.status(200).json({ transactions });
   } catch (err) {
