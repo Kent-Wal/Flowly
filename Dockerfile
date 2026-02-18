@@ -7,6 +7,9 @@ WORKDIR /app
 # Copy the package.json and the package-lock.json files to the container
 COPY package*.json ./
 
+# Copy prisma schema so `prisma generate` can run during install
+COPY prisma ./prisma
+
 # run npm install
 RUN npm install
 
