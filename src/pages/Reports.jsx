@@ -129,6 +129,24 @@ export default function Reports() {
     return <div style={{ height: 200 }}><Line data={data} options={options} /></div>;
   }
 
+  function SpendingTrendChart({ labels, expenseSeries }) {
+    const data = {
+      labels,
+      datasets: [
+        {
+          label: 'Spending',
+          data: expenseSeries,
+          borderColor: '#f97366',
+          backgroundColor: 'rgba(249,115,102,0.14)',
+          tension: 0.3,
+          fill: true,
+        }
+      ]
+    };
+    const options = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
+    return <div style={{ height: 220 }}><Line data={data} options={options} /></div>;
+  }
+
   function BarChart({ categories }) {
     const labels = categories.map(c => c[0]);
     const data = { labels, datasets: [{ label: 'Spending', data: categories.map(c=>c[1]), backgroundColor: ['#4e73df','#21a0a0','#f6c85f','#f28b82','#c39bd3','#ffb74d'] }] };
@@ -140,8 +158,8 @@ export default function Reports() {
     const data = {
       labels,
       datasets: [
-        { label: 'Income', data: income, backgroundColor: 'rgba(58,167,109,0.18)', borderColor: '#3aa76d', fill: true },
-        { label: 'Expense', data: expense, backgroundColor: 'rgba(242,139,130,0.18)', borderColor: '#f28b82', fill: true }
+        { label: 'Income', data: income, backgroundColor: 'rgba(58,167,109,0.18)', borderColor: '#3aa76d', fill: true, tension: 0.4, cubicInterpolationMode: 'monotone' },
+        { label: 'Expense', data: expense, backgroundColor: 'rgba(242,139,130,0.18)', borderColor: '#f28b82', fill: true, tension: 0.4, cubicInterpolationMode: 'monotone' }
       ]
     };
     const options = { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } };
@@ -168,7 +186,7 @@ export default function Reports() {
         <div className="card">
           <div className="card-head"><h2>Spending trends</h2></div>
           <div style={{ padding: 12 }}>
-            {loading ? <div className="muted">Loading…</div> : <LineChart labels={trendLabels} expenseSeries={expenseSeries} incomeSeries={incomeSeries} />}
+            {loading ? <div className="muted">Loading…</div> : <SpendingTrendChart labels={trendLabels} expenseSeries={expenseSeries} />}
           </div>
         </div>
 
