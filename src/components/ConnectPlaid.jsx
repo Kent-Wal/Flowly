@@ -7,7 +7,7 @@ import { getAuthToken } from '../utils/auth';
 // POST /plaid/create_link_token -> { link_token }
 // POST /plaid/exchange_public_token -> { access_token }
 
-export default function ConnectPlaid({ userId, children }) {
+export default function ConnectPlaid({ userId, children, refreshOnConnect = false }) {
   const [linkToken, setLinkToken] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

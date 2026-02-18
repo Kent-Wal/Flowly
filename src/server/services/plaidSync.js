@@ -7,9 +7,21 @@ export async function syncAccountsForItem({ accessToken, itemId, userId, institu
     try {
         const accountsRes = await plaidClient.accountsGet({ access_token: accessToken });
         const accounts = accountsRes?.data?.accounts || [];
+        // track returned Plaid account ids so we can remove stale local accounts
+        const returnedPlaidAccountIds = new Set(accounts.map(a => String(a.account_id)));
         for (const acct of accounts) {
             try {
                 const plaidAccountId = acct.account_id;
+                // skip accounts the user explicitly removed via UI
+                try {
+                    const removed = await prisma.removedPlaidAccount.findFirst({ where: { plaidAccountId: String(plaidAccountId), itemId } }).catch(() => null);
+                    if (removed) {
+                        console.log('syncAccountsForItem: skipping account recreated by Plaid because user removed it', plaidAccountId);
+                        continue;
+                    }
+                } catch (e) {
+                    // if lookup fails, continue with upsert to avoid blocking sync
+                }
                 const name = acct.name || 'Unknown';
                 const officialName = acct.official_name || null;
                 const mask = acct.mask || null;
@@ -47,6 +59,22 @@ export async function syncAccountsForItem({ accessToken, itemId, userId, institu
                 console.warn('syncAccountsForItem: failed to persist account', acct?.account_id, e?.message || e);
             }
         }
+
+        // cleanup: remove local accounts for this item that Plaid no longer reports
+        try {
+            const localAccounts = await prisma.account.findMany({ where: { itemId } });
+            for (const local of localAccounts) {
+                if (!local.plaidAccountId) continue;
+                if (!returnedPlaidAccountIds.has(String(local.plaidAccountId))) {
+                    console.log('syncAccountsForItem: removing stale local account', local.id, 'plaidAccountId', local.plaidAccountId);
+                    await prisma.transaction.deleteMany({ where: { accountId: local.id } });
+                    await prisma.account.delete({ where: { id: local.id } });
+                }
+            }
+        } catch (e) {
+            console.warn('syncAccountsForItem: failed to cleanup stale accounts', e?.message || e);
+        }
+
         return { synced: accounts.length };
     } catch (e) {
         console.warn('syncAccountsForItem: failed to fetch accounts from Plaid', e?.message || e);

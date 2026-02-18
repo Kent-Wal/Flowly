@@ -26,6 +26,21 @@ router.delete('/:id', async (req, res) => {
     if (!account) return res.status(404).json({ error: 'Account not found' });
     if (account.userId !== payload.id) return res.status(403).json({ error: 'Forbidden' });
 
+    // Record the user's removal intent so sync won't re-create the account,
+    // then delete transactions and the account record.
+    try {
+      await prisma.removedPlaidAccount.create({
+        data: {
+          plaidAccountId: account.plaidAccountId || '',
+          itemId: account.itemId,
+          userId: account.userId,
+          reason: 'user_removed_via_ui'
+        }
+      });
+    } catch (e) {
+      console.warn('Failed to record removed plaid account', e?.message || e);
+    }
+
     // Delete transactions for account, then delete the account record
     await prisma.transaction.deleteMany({ where: { accountId } });
     await prisma.account.delete({ where: { id: accountId } });

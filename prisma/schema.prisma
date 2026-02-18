@@ -95,3 +95,16 @@ model CategoryMap {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
+
+// Records accounts explicitly removed by the user so sync doesn't re-create them
+model RemovedPlaidAccount {
+  id             Int      @id @default(autoincrement())
+  plaidAccountId String
+  itemId         Int?
+  userId         Int?
+  reason         String?
+  removedAt      DateTime @default(now())
+
+  @@index([plaidAccountId])
+  @@index([itemId])
+}
