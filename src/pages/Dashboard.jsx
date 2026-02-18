@@ -196,11 +196,6 @@ export default function Dashboard() {
         <div className="card">
           <div className="card-head">
             <h2>Spending summary</h2>
-            <div className="legend">
-              <span className="dot cyan" /> Essentials
-              <span className="dot green" /> Discretionary
-              <span className="dot blue" /> Savings
-            </div>
           </div>
           <div style={{ display: 'flex', gap: 24, alignItems: 'center', justifyContent: 'center', width: '100%' }}>
             <div style={{ flex: '0 0 48%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

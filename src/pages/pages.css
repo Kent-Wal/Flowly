@@ -250,7 +250,19 @@
     flex-wrap: wrap;
 }
 
-.input,
+.input {
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid var(--ring);
+    background: rgba(255, 255, 255, .04);
+    color: var(--text);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    color-scheme: dark; /* hint UA to use dark popups */
+}
+
 .select {
     height: 38px;
     padding: 0 12px;
@@ -268,6 +280,22 @@
     background-position: right 10px center;
     background-size: 16px 16px;
     padding-right: 38px; /* room for chevron */
+}
+
+/* hide native date picker icon in WebKit browsers */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+/* Firefox date input adjustments */
+input[type="date"]::-moz-clear,
+input[type="date"]::-moz-focus-inner {
+    border: 0;
+}
+
+/* center the displayed date text */
+input[type="date"].input {
+    text-align: center;
 }
 
 .input::placeholder {
