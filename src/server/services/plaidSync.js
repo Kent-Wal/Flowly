@@ -16,7 +16,6 @@ export async function syncAccountsForItem({ accessToken, itemId, userId, institu
                 try {
                     const removed = await prisma.removedPlaidAccount.findFirst({ where: { plaidAccountId: String(plaidAccountId), itemId } }).catch(() => null);
                     if (removed) {
-                        console.log('syncAccountsForItem: skipping account recreated by Plaid because user removed it', plaidAccountId);
                         continue;
                     }
                 } catch (e) {
@@ -102,7 +101,6 @@ export async function syncTransactionsForItem({ accessToken, itemId, userId, sta
                 options: { count: pageSize, offset }
             });
             const transactions = txRes?.data?.transactions || [];
-            console.log('syncTransactionsForItem: fetched', transactions.length, 'transactions (offset', offset, ') for item', itemId);
             for (const tx of transactions) {
                 try {
                     const plaidTransactionId = tx.transaction_id;
@@ -112,11 +110,6 @@ export async function syncTransactionsForItem({ accessToken, itemId, userId, sta
                     // prefer matching both plaidAccountId and itemId to avoid assigning transactions to a different user's account
                     const accountRecord = await prisma.account.findFirst({ where: { plaidAccountId: String(plaidAccountId), itemId } });
                     if (!accountRecord) {
-                        console.warn('syncTransactionsForItem: no local account for plaidAccountId', plaidAccountId, 'itemId', itemId, 'skipping transaction', plaidTransactionId);
-                        continue;
-                    }
-                    if (!accountRecord) {
-                        console.warn('syncTransactionsForItem: no local account for plaidAccountId', plaidAccountId, 'skipping transaction', plaidTransactionId);
                         continue;
                     }
 

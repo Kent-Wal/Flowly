@@ -4,20 +4,25 @@ FROM node:22
 # set the working directory
 WORKDIR /app
 
-# Copy the package.json and the package-lock.json files to the container
+# Copy package files and prisma schema before installing so postinstall can run
 COPY package*.json ./
-
-# Copy prisma schema so `prisma generate` can run during install
 COPY prisma ./prisma
 
-# run npm install
-RUN npm install
+# Install deps (includes dev deps so we can build the frontend), generate Prisma client
+RUN npm ci
 
-# copy the rest of the files in the project
+# Copy rest of app files
 COPY . .
 
-# expose the port the app runs on
-EXPOSE 5173
+# Build the frontend
+RUN npm run build
 
-# Define the command to run the application
-CMD ["npm", "run", "dev:all"]
+# Remove dev deps to slim image (keep production deps incl. prisma)
+RUN npm prune --production
+
+# expose the backend port
+EXPOSE 5000
+
+# Start the production server
+ENV NODE_ENV=production
+CMD ["node", "src/server/server.js"]

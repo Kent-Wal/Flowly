@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import authRoutes from './routes/authRoutes.js';
 import plaidRoutes from './routes/plaidRoutes.js';
 import transactionRoutes from './routes/transactionRoutes.js';
@@ -22,6 +23,15 @@ app.use('/accounts', accountRoutes);
 app.get('/', (req, res) => {
     res.send('API running — use /auth or the frontend at :5173');
 });
+
+// Serve frontend in production (assumes `vite build` output in /dist)
+if (process.env.NODE_ENV === 'production') {
+    const distPath = path.resolve(process.cwd(), 'dist');
+    app.use(express.static(distPath));
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(distPath, 'index.html'));
+    });
+}
 
 app.listen(PORT, () => {
     console.log(`Server has started on port: ${PORT}`);
