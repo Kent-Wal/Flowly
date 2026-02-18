@@ -109,18 +109,18 @@ export default function Reports() {
     const data = {
       labels,
       datasets: [
+      {
+          label: 'Income',
+          data: incomeSeries,
+          borderColor: '#3aa76d',
+          backgroundColor: 'rgba(58,167,109,0.12)',
+          tension: 0.25,
+        },
         {
           label: 'Expense',
           data: expenseSeries,
           borderColor: '#f28b82',
           backgroundColor: 'rgba(242,139,130,0.15)',
-          tension: 0.25,
-        },
-        {
-          label: 'Income',
-          data: incomeSeries,
-          borderColor: '#3aa76d',
-          backgroundColor: 'rgba(58,167,109,0.12)',
           tension: 0.25,
         }
       ]
