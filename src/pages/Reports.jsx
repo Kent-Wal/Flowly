@@ -168,7 +168,7 @@ export default function Reports() {
         <div className="card">
           <div className="card-head"><h2>Spending trends</h2></div>
           <div style={{ padding: 12 }}>
-            {loading ? <div className="muted">Loading…</div> : <LineChart labels={trendLabels} seriesA={expenseSeries} seriesB={incomeSeries} />}
+            {loading ? <div className="muted">Loading…</div> : <LineChart labels={trendLabels} expenseSeries={expenseSeries} incomeSeries={incomeSeries} />}
           </div>
         </div>
 

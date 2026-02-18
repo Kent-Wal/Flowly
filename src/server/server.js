@@ -3,6 +3,7 @@ import authRoutes from './routes/authRoutes.js';
 import plaidRoutes from './routes/plaidRoutes.js';
 import transactionRoutes from './routes/transactionRoutes.js';
 import accountRoutes from './routes/accountRoutes.js';
+import { startScheduler } from './tasks/syncScheduler.js';
 
 //start express
 const app = express();
@@ -24,4 +25,6 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Server has started on port: ${PORT}`);
+    // start background scheduler for Plaid syncs
+    try { startScheduler(); } catch (e) { console.warn('Failed to start sync scheduler', e?.message || e); }
 });

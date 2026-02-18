@@ -18,6 +18,7 @@
     "chart.js": "^4.4.0",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
+    "node-cron": "^4.1.0",
     "pg": "^8.16.3",
     "plaid": "^39.1.0",
     "react": "^19.1.1",
