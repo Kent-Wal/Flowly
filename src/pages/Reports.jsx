@@ -129,21 +129,30 @@ export default function Reports() {
     return <div style={{ height: 200 }}><Line data={data} options={options} /></div>;
   }
 
-  function SpendingTrendChart({ labels, expenseSeries }) {
+  // Net cash flow = income - expense per bucket
+  function NetCashFlowChart({ labels, incomeSeries, expenseSeries }) {
+    const netSeries = labels.map((_, i) => (incomeSeries[i] || 0) - (expenseSeries[i] || 0));
     const data = {
       labels,
       datasets: [
         {
-          label: 'Spending',
-          data: expenseSeries,
-          borderColor: '#f97366',
-          backgroundColor: 'rgba(249,115,102,0.14)',
-          tension: 0.3,
+          label: 'Net cash flow',
+          data: netSeries,
+          borderColor: '#4e73df',
+          backgroundColor: 'rgba(78,115,223,0.08)',
+          tension: 0.25,
           fill: true,
         }
       ]
     };
-    const options = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } };
+    const options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: 'top' } },
+      scales: {
+        y: { beginAtZero: false }
+      }
+    };
     return <div style={{ height: 220 }}><Line data={data} options={options} /></div>;
   }
 
@@ -184,9 +193,9 @@ export default function Reports() {
 
       <section className="grid-2">
         <div className="card">
-          <div className="card-head"><h2>Spending trends</h2></div>
+          <div className="card-head"><h2>Net cash flow</h2></div>
           <div style={{ padding: 12 }}>
-            {loading ? <div className="muted">Loading…</div> : <SpendingTrendChart labels={trendLabels} expenseSeries={expenseSeries} />}
+            {loading ? <div className="muted">Loading…</div> : <NetCashFlowChart labels={trendLabels} incomeSeries={incomeSeries} expenseSeries={expenseSeries} />}
           </div>
         </div>
 
