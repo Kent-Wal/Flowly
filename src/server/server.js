@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import authRoutes from './routes/authRoutes.js';
 import plaidRoutes from './routes/plaidRoutes.js';
 import transactionRoutes from './routes/transactionRoutes.js';
@@ -24,9 +25,9 @@ app.get('/', (req, res) => {
     res.send('API running — use /auth or the frontend at :5173');
 });
 
-// Serve frontend in production (assumes `vite build` output in /dist)
-if (process.env.NODE_ENV === 'production') {
-    const distPath = path.resolve(process.cwd(), 'dist');
+// Serve frontend if `dist` exists (built Vite output)
+const distPath = path.resolve(process.cwd(), 'dist');
+if (fs.existsSync(distPath)) {
     app.use(express.static(distPath));
     app.get(/.*/, (req, res) => {
         res.sendFile(path.join(distPath, 'index.html'));
