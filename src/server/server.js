@@ -20,10 +20,7 @@ app.use('/plaid', plaidRoutes);
 app.use('/transactions', transactionRoutes);
 app.use('/accounts', accountRoutes);
 
-// health/root route
-app.get('/', (req, res) => {
-    res.send('API running — use /auth or the frontend at :5173');
-});
+// health/root route will be handled after static frontend check below
 
 // Serve frontend if `dist` exists (built Vite output)
 const distPath = path.resolve(process.cwd(), 'dist');
@@ -31,6 +28,16 @@ if (fs.existsSync(distPath)) {
     app.use(express.static(distPath));
     app.get(/.*/, (req, res) => {
         res.sendFile(path.join(distPath, 'index.html'));
+    });
+
+    // root should serve frontend when available
+    app.get('/', (req, res) => {
+        res.sendFile(path.join(distPath, 'index.html'));
+    });
+} else {
+    // health/root route when frontend isn't built
+    app.get('/', (req, res) => {
+        res.send('API running — use /auth or the frontend at :5173');
     });
 }
 
