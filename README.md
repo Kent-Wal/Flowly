@@ -5,6 +5,8 @@ It integrates with **Plaid** to securely retrieve financial account and transact
 
 The application is deployed using **Render** with a managed PostgreSQL database, and can be found at: [Flowly](https://flowly-v26d.onrender.com)
 
+When connecting to a bank account using Plaid use the username **user_good** and the password **pass_good** with any bank institution.
+
 ---
 
 ## Features
