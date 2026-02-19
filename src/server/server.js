@@ -18,11 +18,8 @@ app.use(express.json());
 //routes
 app.use('/auth', authRoutes);
 app.use('/plaid', plaidRoutes);
-app.use('/transactions', transactionRoutes);
-// legacy/api compatibility: some frontends call /api/transactions
+// Expose API routes under `/api/*` to avoid colliding with client-side routes
 app.use('/api/transactions', transactionRoutes);
-app.use('/accounts', accountRoutes);
-// legacy/api compatibility: some frontends call /api/accounts
 app.use('/api/accounts', accountRoutes);
 
 // Health check endpoint
