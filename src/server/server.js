@@ -19,6 +19,8 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/plaid', plaidRoutes);
 app.use('/transactions', transactionRoutes);
+// legacy/api compatibility: some frontends call /api/transactions
+app.use('/api/transactions', transactionRoutes);
 app.use('/accounts', accountRoutes);
 
 // Health check endpoint

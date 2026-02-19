@@ -17,6 +17,9 @@ COPY . .
 # Build the frontend
 RUN npm run build
 
+# Write build-info into `dist` so deployed image can be verified
+RUN node scripts/write-build-info.js
+
 # Remove dev deps to slim image (keep production deps incl. prisma)
 RUN npm prune --production
 
@@ -25,4 +28,5 @@ EXPOSE 5000
 
 # Start the production server
 ENV NODE_ENV=production
-CMD ["node", "src/server/server.js"]
+#CMD ["node", "src/server/server.js"]
+CMD ["sh", "-c", "npx prisma migrate deploy --schema=prisma/schema.prisma && node src/server/server.js"]
