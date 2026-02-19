@@ -36,3 +36,9 @@ The application is deployed using **Render** with a managed PostgreSQL database,
 - Add budgeting features
 - Allow users to export financial data to CSV or PDF
 
+---
+
+## License
+
+This project is licensed under the MIT License — see the [LICENSE](./LICENSE) file for details.
+
