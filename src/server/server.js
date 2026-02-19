@@ -22,6 +22,8 @@ app.use('/transactions', transactionRoutes);
 // legacy/api compatibility: some frontends call /api/transactions
 app.use('/api/transactions', transactionRoutes);
 app.use('/accounts', accountRoutes);
+// legacy/api compatibility: some frontends call /api/accounts
+app.use('/api/accounts', accountRoutes);
 
 // Health check endpoint
 app.get('/health', async (req, res) => {
