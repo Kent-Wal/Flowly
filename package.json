@@ -11,7 +11,7 @@
     "start:server": "nodemon --watch src --legacy-watch src/server/server.js",
     "start:api": "node src/server/server.js",
     "dev:all": "concurrently \"npm run start:server\" \"npm run dev\"",
-    "postinstall": "prisma generate"
+    "postinstall": "node scripts/postinstall.js"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
