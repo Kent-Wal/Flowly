@@ -4,6 +4,7 @@ import { Link, Navigate } from "react-router-dom";
 import "./pages.css";
 import ConnectPlaid from "../components/ConnectPlaid";
 import { getAuthToken } from "../utils/auth";
+import { apiFetch } from "../utils/api.js";
 
 export default function Dashboard() {
   const token = getAuthToken();
@@ -23,7 +24,7 @@ export default function Dashboard() {
     try {
       const currentToken = getAuthToken();
         // fetch user (accounts with balances)
-        const meRes = await fetch('/auth/me', { headers: { Authorization: `Bearer ${currentToken}` } });
+        const meRes = await apiFetch('/auth/me', { headers: { Authorization: `Bearer ${currentToken}` } });
         let accounts = [];
         if (meRes.ok) {
           const data = await meRes.json();
@@ -35,7 +36,7 @@ export default function Dashboard() {
         setTotalBalance(total);
 
         // fetch transactions and compute current-month spending
-        const txRes = await fetch('/api/transactions', { headers: { Authorization: `Bearer ${currentToken}` } });
+        const txRes = await apiFetch('/api/transactions', { headers: { Authorization: `Bearer ${currentToken}` } });
         if (!txRes.ok) throw new Error('Failed to fetch transactions');
         const txData = await txRes.json();
         const txs = txData.transactions || [];

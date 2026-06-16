@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import "./pages.css";
 import { getAuthToken } from "../utils/auth";
+import { apiFetch } from "../utils/api.js";
 import { Navigate } from "react-router-dom";
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
@@ -22,7 +23,7 @@ export default function Reports() {
       setError(null);
       try {
         const token = getAuthToken();
-        const res = await fetch('/api/transactions', { headers: { Authorization: `Bearer ${token}` } });
+        const res = await apiFetch('/api/transactions', { headers: { Authorization: `Bearer ${token}` } });
         if (!res.ok) throw new Error('Failed to load transactions');
         const data = await res.json();
         const txs = data.transactions || [];

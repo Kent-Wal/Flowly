@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getUserId } from '../utils/auth';
 import { getAuthToken } from '../utils/auth';
+import { apiFetch } from '../utils/api.js';
 
 // Plaid Link implementation that loads the Plaid script directly.
 // Expects server routes:
@@ -102,7 +103,7 @@ export default function ConnectPlaid({ userId, children, refreshOnConnect = fals
 
       try {
         const derivedUserId = userId || getUserId();
-        const res = await fetch('/plaid/create_link_token', {
+        const res = await apiFetch('/plaid/create_link_token', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(derivedUserId ? { userId: derivedUserId } : {}),
@@ -135,7 +136,7 @@ export default function ConnectPlaid({ userId, children, refreshOnConnect = fals
         setLoading(true);
         try {
           const derivedUserId = userId || getUserId();
-          const res = await fetch('/plaid/exchange_public_token', {
+          const res = await apiFetch('/plaid/exchange_public_token', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(derivedUserId ? { public_token, userId: derivedUserId } : { public_token }),

@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import "./pages.css";
 import { getAuthToken } from "../utils/auth";
+import { apiFetch } from "../utils/api.js";
 import { Navigate } from "react-router-dom";
 import ConnectPlaid from "../components/ConnectPlaid";
 
@@ -18,7 +19,7 @@ export default function Settings() {
     async function fetchMe() {
       setLoading(true);
       try {
-        const res = await fetch('/auth/me', {
+        const res = await apiFetch('/auth/me', {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) throw new Error('Failed to fetch user');
@@ -39,7 +40,7 @@ export default function Settings() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/accounts/${accountId}`, {
+      const res = await apiFetch(`/api/accounts/${accountId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });

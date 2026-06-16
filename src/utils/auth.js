@@ -1,9 +1,11 @@
+import { apiFetch } from './api.js';
+
 // Simple auth helper used by the client to register or login and store the token
 export async function authUser(action, payload) {
   // action: 'register' or 'login'
   const endpoint = action === 'register' ? '/auth/register' : '/auth/login';
 
-  const res = await fetch(endpoint, {
+  const res = await apiFetch(endpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),

@@ -20,14 +20,12 @@ export default defineConfig({
         changeOrigin: true,
         secure: false
       },
-      // API namespace: forward /api/* to backend and strip the prefix so backend sees /transactions, /accounts, etc.
+      // forward /api/* to backend (keep /api prefix — server mounts at /api/transactions, etc.)
       '/api': {
         target: 'http://localhost:5000',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, ''),
       },
-      // Note: use the /api namespace for backend requests to avoid proxying SPA navigation paths.
     }
   }
 })

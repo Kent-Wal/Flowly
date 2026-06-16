@@ -1,7 +1,15 @@
 // Simple seed script to create common Plaid category -> app category mappings
-import prismaPkg from '@prisma/client';
-const { PrismaClient } = prismaPkg;
-const prisma = new PrismaClient();
+import 'dotenv/config';
+import pkg from '@prisma/client';
+import pgPkg from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
+
+const { PrismaClient } = pkg;
+const { Pool } = pgPkg;
+
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   const seeds = [

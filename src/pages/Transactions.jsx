@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import "./pages.css";
 import { Navigate } from "react-router-dom";
 import { getAuthToken } from "../utils/auth";
+import { apiFetch } from "../utils/api.js";
 
 export default function Transactions() {
   const token = getAuthToken();
@@ -30,7 +31,7 @@ export default function Transactions() {
         }
         // debug: ensure token present when making request
         // console.debug('fetchTransactions using token', currentToken && currentToken.slice(0,8));
-        const res = await fetch('/api/transactions', {
+        const res = await apiFetch('/api/transactions', {
           headers: { Authorization: `Bearer ${currentToken}` },
         });
         if (!res.ok) throw new Error('Failed to fetch transactions');
@@ -129,7 +130,7 @@ export default function Transactions() {
                           // save
                           try {
                             const patchToken = getAuthToken();
-                            const res = await fetch(`/api/transactions/${t.id}`, {
+                            const res = await apiFetch(`/api/transactions/${t.id}`, {
                               method: 'PATCH',
                               headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${patchToken}` },
                               body: JSON.stringify({ category: editingCategory || null }),
