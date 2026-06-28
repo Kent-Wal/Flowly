@@ -22,29 +22,13 @@ When connecting to a bank account using Plaid use the username **user_good** and
 ## Tech Stack
 
 - **Frontend:** ReactJS + Vite → deployed on **Vercel**
-- **Backend:** NodeJS + Express → deployed on **Render** (or Railway / Fly.io)
+- **Backend:** NodeJS + Express → deployed on **Render**
 - **Database:** PostgreSQL on **Supabase**
 - **ORM:** Prisma
 - **Containerization:** Docker
 
 ---
 
-## Local Development
-
-```bash
-cp .env.example .env   # fill in values (local Postgres or Supabase)
-npm install
-npx prisma migrate dev
-npm run dev:all        # frontend :5173, API :5000
-```
-
-Or with Docker:
-
-```bash
-docker compose up
-```
-
----
 
 ## Production Deployment
 
