@@ -4,12 +4,14 @@ FROM node:22
 # set the working directory
 WORKDIR /app
 
-# Copy package files and prisma schema before installing so postinstall can run
+# Copy package files and prisma schema before installing
 COPY package*.json ./
 COPY prisma ./prisma
+COPY prisma.config.ts ./prisma.config.ts
 
-# Install deps (includes dev deps so we can build the frontend), generate Prisma client
-RUN npm ci
+# Skip postinstall during image build (scripts/ not copied yet; no DATABASE_URL here)
+RUN npm ci --ignore-scripts
+RUN npx prisma generate
 
 # Copy rest of app files
 COPY . .
